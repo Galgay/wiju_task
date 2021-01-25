@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>위주 과제</title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 구글맵 라이브러리 Load -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmRx2_FxJJp6MifcYd_3MoAGRYDnD2fE8&libraries=&v=weekly"></script>
+    <!-- 구글맵 유틸리티(maplabel) 라이브러리 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/googlemaps-v3-utility-library-latest@1.0.1/maplabel/src/maplabel.js"></script>
+    <script src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+  </head>
+  <body>
+    <div id="map"></div>
+    <!-- The Modal -->
+    <div id="marker_detail">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h1>마커 상세</h1>
+            <div>
+                <label for="lat">위도</label>
+                <input id="lat" type="number">
+            </div>
+            <div>
+                <label for="lon">경도</label>
+                <input id="lon" type="number">
+            </div>
+            
+        </div>
+  </div>
+  </body>
+</html>

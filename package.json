@@ -1,0 +1,17 @@
+{
+  "name": "wiju_task",
+  "version": "1.0.0",
+  "description": "위주 면접 과제",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "js-map-label": "^1.0.1",
+    "nodemon": "^2.0.7"
+  }
+}
