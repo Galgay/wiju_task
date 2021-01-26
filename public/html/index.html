@@ -23,11 +23,13 @@
               <div class="desc-wrap">위주 지역입니다.</div>
               <div class="input-wrap">
                   <label for="lat">위도</label>
-                  <input id="lat" type="number">
+                  <input id="lat" type="text" onkeypress="return isNumberKey(event, this)" 
+                    onkeyup="this.value=this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');">
               </div>
               <div class="input-wrap">
                   <label for="lng">경도</label>
-                  <input id="lng" type="number">
+                  <input id="lng" type="text" onkeypress="return isNumberKey(event, this)"
+                  onkeyup="this.value=this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');">
               </div>
             </div>
             <div class="btn-wrap">

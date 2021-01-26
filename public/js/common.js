@@ -36,8 +36,8 @@ function initMap() {
     });
 
     map.addListener("click", (mapsMouseEvent) => {
-        let lat = mapsMouseEvent.latLng.lat;
-        let lng = mapsMouseEvent.latLng.lng;
+        const lat = mapsMouseEvent.latLng.lat;
+        const lng = mapsMouseEvent.latLng.lng;
         openModal('N', lat, lng);
     });
 
@@ -64,15 +64,15 @@ function setMarker() {
         markers = [];
     }
     coords.forEach(function(coord) {
-        let marker = new google.maps.Marker({
+        const marker = new google.maps.Marker({
             position: { lat: coord.lat, lng: coord.lng},
             map
         });
         
         marker.addListener("click", (event) => {
             curMarker = marker;
-            let lat = event.latLng.lat;
-            let lng = event.latLng.lng;
+            const lat = event.latLng.lat;
+            const lng = event.latLng.lng;
             openModal('U', lat, lng);
         });
         markers.push(marker);
@@ -98,8 +98,8 @@ function drawPolygon() {
     polygon.addListener("click", function(mapsMouseEvent) {
         // showDetail
         
-        let lat = mapsMouseEvent.latLng.lat;
-        let lng = mapsMouseEvent.latLng.lng;
+        const lat = mapsMouseEvent.latLng.lat;
+        const lng = mapsMouseEvent.latLng.lng;
         openModal('N', lat, lng);
     });
 
@@ -115,8 +115,9 @@ function drawPolygon() {
 
 // Polygon 클릭 시 상세 정보
 function showDetail(event) {
-    let contentString =
-    "<b>위주 구역</b><br><br>위주지역입니다.";
+    const contentString =
+        "<b>위주 구역</b>" + 
+        "<br><br>위주지역입니다.";
 
     if (!infoWindow) {
         infoWindow = new google.maps.InfoWindow();
@@ -161,8 +162,8 @@ function closeModal() {
 
 // 마커 추가
 function addMarker() {
-    let lat = $('#lat').val();
-    let lng = $('#lng').val();  
+    const lat = $('#lat').val();
+    const lng = $('#lng').val();  
     
     if (!lat || !lng) {
         alert('위도와 경도를 모두 입력해주세요.');
@@ -180,9 +181,9 @@ function addMarker() {
 
 // 마커 수정
 function updateMarker() {
-    let curCoord = curMarker.getPosition();
-    let curLat = curCoord.lat();
-    let curLng = curCoord.lng();
+    const curCoord = curMarker.getPosition();
+    const curLat = curCoord.lat();
+    const curLng = curCoord.lng();
     let lat = $('#lat').val();
     let lng = $('#lng').val();  
 
@@ -198,7 +199,7 @@ function updateMarker() {
         return false;
     }
     
-    let idx = coords.findIndex(function(item) {
+    const idx = coords.findIndex(function(item) {
             return item.lat === curLat && item.lng == curLng
         }
     );
@@ -216,10 +217,10 @@ function updateMarker() {
 // 마커 삭제
 function deleteMarker() {
     if (curMarker) {
-        let coord = curMarker.getPosition();
+        const coord = curMarker.getPosition();
         
         // 위경도 삭제
-        let idx = coords.findIndex(function(item) {
+        const idx = coords.findIndex(function(item) {
                 return item.lat === coord.lat() && item.lng == coord.lng()
             }
         );
@@ -228,7 +229,7 @@ function deleteMarker() {
         }
         
         // 마커 삭제
-        let markerIdx = markers.findIndex(function(item) {
+        const markerIdx = markers.findIndex(function(item) {
                 return item == curMarker
             }
         );
@@ -256,3 +257,20 @@ function isValidCoord(lat, lng) {
 
     return true;
 }
+
+function isNumberKey(evt, obj) {
+    const charCode = evt.which || evt.keyCode; 
+
+    // 숫자 또는 '.'이 아닌 경우
+    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+
+    // 내용에 '.'이 있는데 추가로 입력한 경우
+    if ($(obj).val().indexOf('.') != -1) {
+        if (charCode == 46) {
+            return false;
+        }
+    }
+}
+
