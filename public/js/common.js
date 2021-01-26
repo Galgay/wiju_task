@@ -173,6 +173,17 @@ function addMarker() {
     if (!isValidCoord(lat, lng)) {
         return false;
     }
+
+    // 위경도 중복 체크
+    const idx = coords.findIndex(function(item) {
+            return item.lat == lat && item.lng == lng
+        }
+    );
+    if (idx != -1) {
+        alert('이미 해당 좌표에 마커가 있습니다.');
+        return false;
+    }
+
     coords.push({ lat: Number(lat), lng : Number(lng)});
     setMarker(map);
     drawPolygon(map);
@@ -195,18 +206,30 @@ function updateMarker() {
     lat = Number(lat);
     lng = Number(lng);
 
+    // 유효한 위경도인지 체크
     if (!isValidCoord(lat, lng)) {
         return false;
     }
     
-    const idx = coords.findIndex(function(item) {
+    // 수정할 좌표 데이터 idx
+    const targetIdx = coords.findIndex(function(item) {
             return item.lat === curLat && item.lng == curLng
         }
     );
 
-    if (idx > -1) {
-        coords[idx].lat = lat;
-        coords[idx].lng = lng;
+    if (targetIdx > -1) {
+        // 위경도 중복 체크
+        const idx = coords.findIndex(function(item, index) {
+                // 현재 수정 중인 데이터가 아니며, 위경도가 동일한 데이터가 있는지 체크
+                return item.lat == lat && item.lng == lng && index != targetIdx;
+            }
+        );
+        if (idx != -1) {
+            alert('이미 해당 좌표에 마커가 있습니다.');
+            return false;
+        }
+        coords[targetIdx].lat = lat;
+        coords[targetIdx].lng = lng;
     }
 
     setMarker(map);
@@ -258,6 +281,7 @@ function isValidCoord(lat, lng) {
     return true;
 }
 
+// 숫자 및 하나의 '.'만 입력 가능하도록 처리
 function isNumberKey(evt, obj) {
     const charCode = evt.which || evt.keyCode; 
 
