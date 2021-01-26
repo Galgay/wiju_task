@@ -41,8 +41,8 @@ function initMap() {
         openModal('N', lat, lng);
     });
 
-    setMarker(map);
-    drawPolygon(map);
+    setMarker();
+    drawPolygon();
 }
 
 // Coord 데이터의 가운데 지점 설정
@@ -185,8 +185,8 @@ function addMarker() {
     }
 
     coords.push({ lat: Number(lat), lng : Number(lng)});
-    setMarker(map);
-    drawPolygon(map);
+    setMarker();
+    drawPolygon();
     closeModal();
 }
 
@@ -232,8 +232,8 @@ function updateMarker() {
         coords[targetIdx].lng = lng;
     }
 
-    setMarker(map);
-    drawPolygon(map);
+    setMarker();
+    drawPolygon();
     closeModal();
 }
 
@@ -262,7 +262,7 @@ function deleteMarker() {
         curMarker.setMap(null);
         
         setBound();
-        drawPolygon(map);
+        drawPolygon();
         closeModal();
     }
 }
