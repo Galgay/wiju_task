@@ -28,10 +28,10 @@ body {
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 500px;
 }
 
-/* The Close Button */
+/* 모달 닫기 버튼 */
 .close {
     color: #aaaaaa;
     float: right;
@@ -44,4 +44,59 @@ body {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+#modal_title {
+    font-size: 28px;
+    font-weight: 800;
+    padding: 15px 0px 20px 0px;
+}
+
+#modal_content {
+    padding: 20px 0px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.desc-wrap {
+    padding: 10px;
+}
+
+.input-wrap {
+    padding: 10px;
+}
+
+.input-wrap label {
+    margin-right: 5px;
+}
+
+.input-wrap input {
+    padding: 5px 8px;
+    border-radius: 5px;
+    border: 1px solid #000000;
+}
+
+.btn-wrap {
+    padding-top: 20px;
+    text-align: right;
+}
+
+.btn-wrap button {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+.btn-wrap button.save {
+    background-color: #70AD47;
+}
+
+.btn-wrap button.update {
+    background-color: #5B9BD5;
+}
+
+.btn-wrap button.delete {
+    background-color: #EC6211;
 }

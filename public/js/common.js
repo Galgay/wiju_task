@@ -1,50 +1,10 @@
-let infoWindow;
-let map;
-let bounds;
-let polygon;
-let markers = [];
-let curMarker;
-let mapLabel;
-
-$(document).ready(function() {
-    initMap();
-    $('#btn_save').click(function() {
-        addMarker();
-    });
-    $('#btn_delete').click(function() {
-        if (curMarker) {
-            let coord = curMarker.getPosition();
-            
-            let idx = coords.findIndex(function(item) {
-                    return item.lat === coord.lat() && item.lng == coord.lng()
-                }
-            );
-
-            if (idx > -1) {
-                coords.splice(idx, 1)
-            }
-
-            
-            let markerIdx = markers.findIndex(function(item) {
-                    return item == curMarker
-                }
-            );
-
-            if (markerIdx > -1) {
-                markers.splice(idx, 1)
-            }
-            curMarker.setMap(null);
-            // setMarker(map);
-            
-            bounds = new google.maps.LatLngBounds();
-            coords.forEach(function(coord) {
-                bounds.extend(coord);
-            });
-            drawPolygon(map);
-            closeModal();
-        }
-    })
-});
+let map; // 현재 표시되는 map
+let bounds; // 구역 가운데 지점을 가져오기 위한 bounds
+let markers = []; // 전체 마커 배열
+let curMarker; // 마커 수정/삭제 시 현재 선택된 마커
+let polygon; // 구역을 표시하는 Polygon
+let mapLabel; // 구역 내에 표시되는 mapLabel
+let infoWindow; // Polygon 클릭 시 표시되는 infoWindow
 
 // 위경도 더미 데이터
 let coords = [
@@ -54,35 +14,49 @@ let coords = [
     { lat: 37.47539622794932, lng: 126.8817188041164},
 ];
 
+$(document).ready(function() {
+    initMap();
+    $('#btn_save').click(function() {
+        addMarker();
+    });
+    $('#btn_update').click(function() {
+        updateMarker();
+    });
+    $('#btn_delete').click(function() {
+        deleteMarker();
+    })
+});
+
 // 맵 생성 (메서드 분리 필요)
 function initMap() {
-    bounds = new google.maps.LatLngBounds();
-    
-    coords.forEach(function(coord) {
-        bounds.extend(coord);
-    });
-
+    setBound();
     map = new google.maps.Map(document.getElementById("map"), {
         zoom: 17,
         center:  bounds.getCenter(),
     });
 
     map.addListener("click", (mapsMouseEvent) => {
-        console.log();
-        console.log('마커 추가');
         let lat = mapsMouseEvent.latLng.lat;
-        let lon = mapsMouseEvent.latLng.lng;
-        $('#lat').val(lat);
-        $('#lon').val(lon);
-        openModal('N');
+        let lng = mapsMouseEvent.latLng.lng;
+        openModal('N', lat, lng);
     });
 
     setMarker(map);
     drawPolygon(map);
 }
 
-function setMarker() {
+// Coord 데이터의 가운데 지점 설정
+function setBound() {
     bounds = new google.maps.LatLngBounds();
+    
+    coords.forEach(function(coord) {
+        bounds.extend(coord);
+    });
+}
+
+// Coord 데이터별 마커 생성
+function setMarker() {
+    setBound();
     if (markers.length > 0) {
         $.each(markers, function(index, item) {
             item.setMap(null);
@@ -97,15 +71,15 @@ function setMarker() {
         
         marker.addListener("click", (event) => {
             curMarker = marker;
-            console.log('마커 수정 / 삭제');
-            // document.getElementById("marker_detail").display = "block";
-            openModal('U');
+            let lat = event.latLng.lat;
+            let lng = event.latLng.lng;
+            openModal('U', lat, lng);
         });
-        bounds.extend(coord);
         markers.push(marker);
     });
 }
 
+// Coord 데이터 이용하여 Polygon 생성
 function drawPolygon() {
     if (mapLabel) {
         mapLabel.setMap(null);
@@ -121,7 +95,13 @@ function drawPolygon() {
         fillColor: "transparent",
     });
     polygon.setMap(map);
-    polygon.addListener("click", showDetail);
+    polygon.addListener("click", function(mapsMouseEvent) {
+        // showDetail
+        
+        let lat = mapsMouseEvent.latLng.lat;
+        let lng = mapsMouseEvent.latLng.lng;
+        openModal('N', lat, lng);
+    });
 
     
     mapLabel = new MapLabel({
@@ -133,6 +113,7 @@ function drawPolygon() {
     });
 }
 
+// Polygon 클릭 시 상세 정보
 function showDetail(event) {
     let contentString =
     "<b>위주 구역</b><br><br>위주지역입니다.";
@@ -145,40 +126,133 @@ function showDetail(event) {
     infoWindow.open(map);
 }
 
-function closeModal() {
-    $('#marker_detail').hide();
-    curMarker = null;
-}
-
-function openModal(type) {
+// 좌표 추가/수정/삭제 모달 Open
+function openModal(type, lat, lng) {
     $('#btn_save').show();
-    $('#btn_modify').show();
+    $('#btn_update').show();
     $('#btn_delete').show();     
 
     // 마커 신규 생성
     if (type == 'N') {
         $('#modal_title').html('마커 생성');
-        $('#btn_modify').hide();
+        $('#btn_update').hide();
         $('#btn_delete').hide();   
     }
     // 마커 수정 및 삭제
     else if (type == 'U') {
-        $('#modal_title').html('마커 수정/삭제');
+        $('#modal_title').html('마커 상세');
         $('#btn_save').hide();
+    }
+
+    if (lat && lng) {
+        $('#lat').val(lat);
+        $('#lng').val(lng);
     }
     $('#marker_detail').show();
 }
 
+// 좌표 추가/수정/삭제 모달 Close
+function closeModal() {
+    $('#lat').val('');
+    $('#lng').val('');  
+    $('#marker_detail').hide();
+    curMarker = null;
+}
+
+// 마커 추가
 function addMarker() {
     let lat = $('#lat').val();
-    let lon = $('#lon').val();  
+    let lng = $('#lng').val();  
     
-    if (!lat || !lon) {
+    if (!lat || !lng) {
         alert('위도와 경도를 모두 입력해주세요.');
         return false;
     }
-    coords.push({ lat: Number(lat), lng : Number(lon)})
+
+    if (!isValidCoord(lat, lng)) {
+        return false;
+    }
+    coords.push({ lat: Number(lat), lng : Number(lng)});
     setMarker(map);
     drawPolygon(map);
     closeModal();
+}
+
+// 마커 수정
+function updateMarker() {
+    let curCoord = curMarker.getPosition();
+    let curLat = curCoord.lat();
+    let curLng = curCoord.lng();
+    let lat = $('#lat').val();
+    let lng = $('#lng').val();  
+
+    if (!lat || !lng) {
+        alert('위도와 경도를 모두 입력해주세요.');
+        return false;
+    }
+
+    lat = Number(lat);
+    lng = Number(lng);
+
+    if (!isValidCoord(lat, lng)) {
+        return false;
+    }
+    
+    let idx = coords.findIndex(function(item) {
+            return item.lat === curLat && item.lng == curLng
+        }
+    );
+
+    if (idx > -1) {
+        coords[idx].lat = lat;
+        coords[idx].lng = lng;
+    }
+
+    setMarker(map);
+    drawPolygon(map);
+    closeModal();
+}
+
+// 마커 삭제
+function deleteMarker() {
+    if (curMarker) {
+        let coord = curMarker.getPosition();
+        
+        // 위경도 삭제
+        let idx = coords.findIndex(function(item) {
+                return item.lat === coord.lat() && item.lng == coord.lng()
+            }
+        );
+        if (idx > -1) {
+            coords.splice(idx, 1)
+        }
+        
+        // 마커 삭제
+        let markerIdx = markers.findIndex(function(item) {
+                return item == curMarker
+            }
+        );
+        if (markerIdx > -1) {
+            markers.splice(idx, 1)
+        }
+        curMarker.setMap(null);
+        
+        setBound();
+        drawPolygon(map);
+        closeModal();
+    }
+}
+
+function isValidCoord(lat, lng) {
+    if (lat > 90 || lat < -90) {
+        alert('위도의 범위는 -90 ~ 90까지 입력 가능합니다.');
+        return false;
+    }
+    
+    if (lng > 180 || lng < -180) {
+        alert('경도의 범위는 -180 ~ 180까지 입력 가능합니다.');
+        return false;
+    }
+
+    return true;
 }

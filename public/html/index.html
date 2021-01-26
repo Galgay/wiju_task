@@ -18,19 +18,22 @@
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <h1 id="modal_title">마커 상세</h1>
-            <div>
-                <label for="lat">위도</label>
-                <input id="lat" type="number">
+            <div id="modal_title">마커 상세</div>
+            <div id="modal_content">
+              <div class="desc-wrap">위주 지역입니다.</div>
+              <div class="input-wrap">
+                  <label for="lat">위도</label>
+                  <input id="lat" type="number">
+              </div>
+              <div class="input-wrap">
+                  <label for="lng">경도</label>
+                  <input id="lng" type="number">
+              </div>
             </div>
-            <div>
-                <label for="lon">경도</label>
-                <input id="lon" type="number">
-            </div>
-            <div>
-              <button id="btn_save">저장</button>
-              <button id="btn_modify">수정</button>
-              <button id="btn_delete">삭제</button>
+            <div class="btn-wrap">
+              <button id="btn_save" class="save">저장</button>
+              <button id="btn_update" class="update">수정</button>
+              <button id="btn_delete" class="delete">삭제</button>
             </div>
         </div>
   </div>
