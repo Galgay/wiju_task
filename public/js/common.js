@@ -35,9 +35,9 @@ function initMap() {
         center:  bounds.getCenter(),
     });
 
-    map.addListener("click", (mapsMouseEvent) => {
-        const lat = mapsMouseEvent.latLng.lat;
-        const lng = mapsMouseEvent.latLng.lng;
+    map.addListener("click", function(event) {
+        const lat = event.latLng.lat;
+        const lng = event.latLng.lng;
         openModal('N', lat, lng);
     });
 
@@ -69,7 +69,7 @@ function setMarker() {
             map
         });
         
-        marker.addListener("click", (event) => {
+        marker.addListener("click", function(event) {
             curMarker = marker;
             const lat = event.latLng.lat;
             const lng = event.latLng.lng;
@@ -165,10 +165,10 @@ function addMarker() {
     const lat = $('#lat').val();
     const lng = $('#lng').val();  
     
-    if (!lat || !lng) {
-        alert('위도와 경도를 모두 입력해주세요.');
-        return false;
-    }
+    // if (!lat || !lng) {
+    //     alert('위도와 경도를 모두 입력해주세요.');
+    //     return false;
+    // }
 
     if (!isValidCoord(lat, lng)) {
         return false;
@@ -198,18 +198,18 @@ function updateMarker() {
     let lat = $('#lat').val();
     let lng = $('#lng').val();  
 
-    if (!lat || !lng) {
-        alert('위도와 경도를 모두 입력해주세요.');
-        return false;
-    }
-
-    lat = Number(lat);
-    lng = Number(lng);
+    // if (!lat || !lng) {
+    //     alert('위도와 경도를 모두 입력해주세요.');
+    //     return false;
+    // }
 
     // 유효한 위경도인지 체크
     if (!isValidCoord(lat, lng)) {
         return false;
     }
+
+    lat = Number(lat);
+    lng = Number(lng);
     
     // 수정할 좌표 데이터 idx
     const targetIdx = coords.findIndex(function(item) {
@@ -268,6 +268,26 @@ function deleteMarker() {
 }
 
 function isValidCoord(lat, lng) {
+    if (!lat) { 
+        alert('위도를 입력해주세요.');
+        return false;
+    }
+
+    if (!lng) { 
+        alert('경도를 입력해주세요.');
+        return false;
+    }
+
+    if (!$.isNumeric(lat) ) { 
+        alert('위도에는 숫자만 입력 가능합니다.');
+        return false;
+    }
+
+    if (!$.isNumeric(lng)) { 
+        alert('경도에는 숫자만 입력 가능합니다.');
+        return false;
+    }
+
     if (lat > 90 || lat < -90) {
         alert('위도의 범위는 -90 ~ 90까지 입력 가능합니다.');
         return false;
