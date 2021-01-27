@@ -10,5 +10,4 @@ app.get('/', function (req, res) {
 });
 
 app.listen(8080, function () {
-  console.log('Wiju Task App listening on port 8080!');
 });

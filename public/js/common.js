@@ -131,13 +131,15 @@ function showDetail(event) {
 function openModal(type, lat, lng) {
     $('#btn_save').show();
     $('#btn_update').show();
-    $('#btn_delete').show();     
+    $('#btn_delete').show();  
+    $('.desc-wrap').show();  
 
     // 마커 신규 생성
     if (type == 'N') {
         $('#modal_title').html('마커 생성');
         $('#btn_update').hide();
-        $('#btn_delete').hide();   
+        $('#btn_delete').hide();  
+        $('.desc-wrap').hide(); 
     }
     // 마커 수정 및 삭제
     else if (type == 'U') {
@@ -164,11 +166,6 @@ function closeModal() {
 function addMarker() {
     const lat = $('#lat').val();
     const lng = $('#lng').val();  
-    
-    // if (!lat || !lng) {
-    //     alert('위도와 경도를 모두 입력해주세요.');
-    //     return false;
-    // }
 
     if (!isValidCoord(lat, lng)) {
         return false;
@@ -176,7 +173,7 @@ function addMarker() {
 
     // 위경도 중복 체크
     const idx = coords.findIndex(function(item) {
-            return item.lat == lat && item.lng == lng
+            return item.lat == lat && item.lng == lng;
         }
     );
     if (idx != -1) {
@@ -198,11 +195,6 @@ function updateMarker() {
     let lat = $('#lat').val();
     let lng = $('#lng').val();  
 
-    // if (!lat || !lng) {
-    //     alert('위도와 경도를 모두 입력해주세요.');
-    //     return false;
-    // }
-
     // 유효한 위경도인지 체크
     if (!isValidCoord(lat, lng)) {
         return false;
@@ -213,7 +205,7 @@ function updateMarker() {
     
     // 수정할 좌표 데이터 idx
     const targetIdx = coords.findIndex(function(item) {
-            return item.lat === curLat && item.lng == curLng
+            return item.lat === curLat && item.lng == curLng;
         }
     );
 
@@ -244,20 +236,20 @@ function deleteMarker() {
         
         // 위경도 삭제
         const idx = coords.findIndex(function(item) {
-                return item.lat === coord.lat() && item.lng == coord.lng()
+                return item.lat === coord.lat() && item.lng == coord.lng();
             }
         );
         if (idx > -1) {
-            coords.splice(idx, 1)
+            coords.splice(idx, 1);
         }
         
         // 마커 삭제
         const markerIdx = markers.findIndex(function(item) {
-                return item == curMarker
+                return item == curMarker;
             }
         );
         if (markerIdx > -1) {
-            markers.splice(idx, 1)
+            markers.splice(idx, 1);
         }
         curMarker.setMap(null);
         
